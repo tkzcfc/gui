@@ -4,6 +4,8 @@ set(name Gui)
 project(${name})
 
 include(cmake/Configuration.cmake)
+set(OutBinDir ${CMAKE_BINARY_DIR}/Bin)
+
 
 add_subdirectory(thirdparty)
 
@@ -15,10 +17,9 @@ source_group("" FILES ${_Sources})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${_Sources})
 
 add_executable(${PROJECT_NAME} ${_Sources})
-target_link_libraries(${PROJECT_NAME} thirdparty)
+target_link_libraries(${PROJECT_NAME} thirdparty ${LUA_ENGINE})
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_LIST_DIR}/thirdparty)
 
-set(OutBinDir ${CMAKE_BINARY_DIR}/Bin)
 set_target_properties(${PROJECT_NAME} PROPERTIES
     FOLDER "Apps"
     RUNTIME_OUTPUT_DIRECTORY                "${OutBinDir}"

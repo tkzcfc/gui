@@ -22,13 +22,18 @@ target_link_libraries(thirdparty
     dep_zlib
 )
 
+
+add_subdirectory(iup)
+target_link_libraries(thirdparty iup)
+configure_target_outdir(iup)
+
 if(GUI_WITH_CONVERTUTF)
     add_subdirectory(ConvertUTF)
     target_link_libraries(thirdparty ConvertUTF)
     configure_target_outdir(ConvertUTF)
 endif(GUI_WITH_CONVERTUTF)
 
-set(LUA_ENGINE plainlua)
+set(LUA_ENGINE lua54)
 add_subdirectory(lua/${LUA_ENGINE})
 add_subdirectory(lua/lua-cjson)
 add_subdirectory(lua/luasocket)
