@@ -46,6 +46,44 @@ else()
     ${platform_spec_path}/lua54/iuplua_mglplot54.lib
     ${platform_spec_path}/lua54/iuplua_plot54.lib
     ${platform_spec_path}/lua54/iuplua_scintilla54.lib
+
+
+    ${platform_spec_path}/imlua_avi54.lib
+    ${platform_spec_path}/imlua_capture54.lib
+    ${platform_spec_path}/imlua_fftw354.lib
+    ${platform_spec_path}/imlua_jp254.lib
+    ${platform_spec_path}/imlua_process_omp54.lib
+    ${platform_spec_path}/imlua_process54.lib
+    ${platform_spec_path}/imlua_wmv54.lib
+    ${platform_spec_path}/imlua54.lib
+    ${platform_spec_path}/im.lib
+    ${platform_spec_path}/im_avi.lib
+    ${platform_spec_path}/im_capture.lib
+    ${platform_spec_path}/im_fftw3.lib
+    ${platform_spec_path}/im_jp2.lib
+    ${platform_spec_path}/im_process.lib
+    ${platform_spec_path}/im_process_omp.lib
+    ${platform_spec_path}/im_wmv.lib
+
+
+    ${platform_spec_path}/cd.lib
+    ${platform_spec_path}/cdcairo.lib
+    ${platform_spec_path}/cdcontextplus.lib
+    ${platform_spec_path}/cddirect2d.lib
+    ${platform_spec_path}/cdgl.lib
+    ${platform_spec_path}/cdim.lib
+    ${platform_spec_path}/cdpdf.lib
+    ${platform_spec_path}/freetype6.lib
+    ${platform_spec_path}/ftgl.lib
+    ${platform_spec_path}/pdflib.lib
+    ${platform_spec_path}/Lua54/cdlua54.lib
+    ${platform_spec_path}/Lua54/cdluacairo54.lib
+    ${platform_spec_path}/Lua54/cdluacontextplus54.lib
+    ${platform_spec_path}/Lua54/cdluadirect2d54.lib
+    ${platform_spec_path}/Lua54/cdluagl54.lib
+    ${platform_spec_path}/Lua54/cdluaim54.lib
+    ${platform_spec_path}/Lua54/cdluapdf54.lib
+
     comctl32.lib
     comdlg32.lib
     gdi32.lib
@@ -62,8 +100,11 @@ else()
 endif()
 
 
-set_target_properties(${target_name} PROPERTIES
-    INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_SOURCE_DIR}/include"
+target_include_directories(${target_name}
+    PUBLIC 
+    "${CMAKE_CURRENT_SOURCE_DIR}/include" 
+    "${CMAKE_CURRENT_SOURCE_DIR}/im/include"
+    "${CMAKE_CURRENT_SOURCE_DIR}/cd/include"
 )
 
 
@@ -101,6 +142,44 @@ add_custom_command(TARGET ${target_name} POST_BUILD
     ${platform_spec_path}/lua54/iuplua_mglplot54.dll
     ${platform_spec_path}/lua54/iuplua_plot54.dll
     ${platform_spec_path}/lua54/iuplua_scintilla54.dll
+
+    ${platform_spec_path}/imlua_avi54.dll
+    ${platform_spec_path}/imlua_capture54.dll
+    ${platform_spec_path}/imlua_fftw354.dll
+    ${platform_spec_path}/imlua_jp254.dll
+    ${platform_spec_path}/imlua_process_omp54.dll
+    ${platform_spec_path}/imlua_process54.dll
+    ${platform_spec_path}/imlua_wmv54.dll
+    ${platform_spec_path}/imlua54.dll
+    ${platform_spec_path}/im.dll
+    ${platform_spec_path}/im_avi.dll
+    ${platform_spec_path}/im_capture.dll
+    ${platform_spec_path}/im_fftw3.dll
+    ${platform_spec_path}/im_jp2.dll
+    ${platform_spec_path}/im_process.dll
+    ${platform_spec_path}/im_process_omp.dll
+    ${platform_spec_path}/im_wmv.dll
+
+
+    ${platform_spec_path}/cd.dll
+    ${platform_spec_path}/cdcairo.dll
+    ${platform_spec_path}/cdcontextplus.dll
+    ${platform_spec_path}/cddirect2d.dll
+    ${platform_spec_path}/cdgl.dll
+    ${platform_spec_path}/cdim.dll
+    ${platform_spec_path}/cdpdf.dll
+    ${platform_spec_path}/freetype6.dll
+    ${platform_spec_path}/ftgl.dll
+    ${platform_spec_path}/pdflib.dll
+    ${platform_spec_path}/Lua54/cdlua54.dll
+    ${platform_spec_path}/Lua54/cdluacairo54.dll
+    ${platform_spec_path}/Lua54/cdluacontextplus54.dll
+    ${platform_spec_path}/Lua54/cdluadirect2d54.dll
+    ${platform_spec_path}/Lua54/cdluagl54.dll
+    ${platform_spec_path}/Lua54/cdluaim54.dll
+    ${platform_spec_path}/Lua54/cdluapdf54.dll
+
+
     ${OutBinDir}
 )
 
