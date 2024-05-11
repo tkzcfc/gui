@@ -3,7 +3,6 @@ project(thirdparty)
 option(GUI_WITH_UNZIP "Build with internal unzip support" ON)
 option(GUI_WITH_CONVERTUTF "Build with internal ConvertUTF support" ON)
 option(GUI_WITH_UCHARDET "Build with internal uchardet support" ON)
-option(GUI_WITH_CURL "Build with internal curl support" OFF)
 option(GUI_WITH_RUST_NET "Build with internal rust_net support" ON)
 
 
@@ -30,12 +29,6 @@ configure_target_outdir(iconv)
 
 
 
-if(GUI_WITH_CURL)
-add_subdirectory(curl)
-target_link_libraries(thirdparty
-    dep_curl
-)
-endif(GUI_WITH_CURL)
 
 if(GUI_WITH_RUST_NET)
     add_subdirectory(rust_net)
