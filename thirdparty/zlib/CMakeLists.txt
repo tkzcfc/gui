@@ -1,4 +1,3 @@
-
 set(lib_name zlib)
 set(target_name dep_${lib_name})
 

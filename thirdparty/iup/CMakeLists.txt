@@ -108,6 +108,7 @@ target_include_directories(${target_name}
 )
 
 
+if(NOT WINDOWS)
 add_custom_command(TARGET ${target_name} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
     ${platform_spec_path}/freetype6.dll
@@ -182,4 +183,5 @@ add_custom_command(TARGET ${target_name} POST_BUILD
 
     ${OutBinDir}
 )
+endif()
 

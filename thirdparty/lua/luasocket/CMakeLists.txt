@@ -44,7 +44,7 @@ if(LINUX)
 endif()
 
 
-target_link_libraries(${target_name} ${LUA_ENGINE})
+target_include_directories(${target_name} PRIVATE ../${LUA_ENGINE})
 
 if(MSVC)
   target_compile_definitions(${target_name} PRIVATE _CRT_SECURE_NO_WARNINGS _WINSOCK_DEPRECATED_NO_WARNINGS)

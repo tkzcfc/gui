@@ -31,8 +31,39 @@
      endif()
  endif()
 
-set(CMAKE_CXX_STANDARD 20)
-set(CXX_STANDARD_FLAG -std=c++20)
+# generators that are capable of organizing into a hierarchy of folders
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+# simplify generator condition, please use them everywhere
+if(CMAKE_GENERATOR STREQUAL Xcode)
+    set(XCODE TRUE)
+elseif(CMAKE_GENERATOR MATCHES Visual)
+    set(VS TRUE)
+endif()
+
+
+# config c standard
+if (NOT WINDOWS)
+    if(NOT DEFINED C_STD)
+        set(C_STD 11)
+    endif()
+    message(STATUS "C_STD=${C_STD}")
+    set(CMAKE_C_STANDARD ${C_STD})
+    set(CMAKE_C_STANDARD_REQUIRED ON)
+endif()
+
+# config c++ standard
+if(NOT DEFINED CXX_STD)
+    set(CXX_STD 20)
+endif()
+message(STATUS "CXX_STD=${CXX_STD}")
+set(CMAKE_CXX_STANDARD ${CXX_STD})
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+if (MSVC)
+    add_compile_options(/GF)
+endif()
+
 
 #if(MSVC)     
 #    # Use the static C library for all build types
