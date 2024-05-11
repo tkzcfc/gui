@@ -6,13 +6,12 @@
 #define IUPLUA_IMGLIB 1
 #define IUPLUA_TUIO 1
 #define IUPLUA_WEB 1
-#define IUPLUA_SCINTILLA 1
 #define USE_LUAGL 0
 
 #include <iup.h>
 #include "iuplua.h"
 
-#if !IUPLUA_NO_GL
+#if IUPLUA_USE_GL
 // gl
 #include "iupgl.h"
 #include "iupglcontrols.h"
@@ -23,7 +22,7 @@
 #endif
 #endif
 
-#if !IUPLUA_NO_IM
+#if IUP_USE_IM
 // im
 #include "iupluaim.h"
 #include "im.h"
@@ -39,11 +38,11 @@
 #include "iupluaweb.h"
 #endif
 
-#if IUPLUA_SCINTILLA
-#include "iuplua_scintilla.h"
+#if IUPLUA_USE_SCINTILLA
+#include "IUPLUA_USE_SCINTILLA.h"
 #endif
 
-#if !IUPLUA_NO_CD
+#if IUP_USE_CD
 #include "iupcontrols.h"
 #include "iupluacontrols.h"
 #include "iup_plot.h"
@@ -53,8 +52,8 @@
 #include <cdluaiup.h>
 #endif
 
-#if !IUPLUA_NO_IM
-#if !IUPLUA_NO_CD
+#if IUP_USE_IM
+#if IUP_USE_CD
 #include <cdluaim.h>
 #endif
 #endif
@@ -78,18 +77,18 @@ void lua_register_iup(lua_State* L)
 #if IUPLUA_WEB
     iupweblua_open(L);
 #endif
-#if IUPLUA_SCINTILLA
+#if IUPLUA_USE_SCINTILLA
     iup_scintillalua_open(L);
 #endif
 
-#if !IUPLUA_NO_GL
+#if IUPLUA_USE_GL
     iupgllua_open(L);
     iupglcontrolslua_open(L);
 #if USE_LUAGL
     luaopen_luagl(L);
 #endif
 #endif
-#if !IUPLUA_NO_CD
+#if IUP_USE_CD
     iupcontrolslua_open(L);
     iup_plotlua_open(L);
     cdlua_open(L);
@@ -97,15 +96,15 @@ void lua_register_iup(lua_State* L)
     cdInitContextPlus();
 #endif
 
-#if !IUPLUA_NO_IM
+#if IUP_USE_IM
     // im
     iupimlua_open(L);
     imlua_open(L);
     imlua_open_process(L);
 #endif
 
-#if !IUPLUA_NO_IM
-#if !IUPLUA_NO_CD
+#if IUP_USE_IM
+#if IUP_USE_CD
     cdluaim_open(L);
 #endif
 #endif
