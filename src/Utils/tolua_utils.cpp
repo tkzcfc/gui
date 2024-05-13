@@ -97,7 +97,7 @@ static char* convertEncoding(const char* inputText, size_t inputLength, const ch
 	{
 		spdlog::error("Failed to convert encoding: {}", strerror(errno));
 		iconv_close(cd);
-		free(outputBuffer);
+		free(outputRawBuffer);
 		return NULL;
 	}
 
@@ -107,8 +107,55 @@ static char* convertEncoding(const char* inputText, size_t inputLength, const ch
 	return outputRawBuffer;
 }
 
+#if G_TARGET_PLATFORM == G_PLATFORM_WIN32
+std::string utf8_to_ansi(const std::string& utf8_text) 
+{
+	int wlen = MultiByteToWideChar(CP_UTF8, 0, utf8_text.c_str(), -1, NULL, 0);
+	std::vector<wchar_t> wbuf(wlen);
+	MultiByteToWideChar(CP_UTF8, 0, utf8_text.c_str(), -1, wbuf.data(), wlen);
+
+	int len = WideCharToMultiByte(CP_ACP, 0, wbuf.data(), -1, NULL, 0, NULL, NULL);
+	std::vector<char> buf(len);
+	WideCharToMultiByte(CP_ACP, 0, wbuf.data(), -1, buf.data(), len, NULL, NULL);
+
+	return std::string(buf.data());
+}
+std::string ansi_to_utf8(const std::string& ansi_text) 
+{
+	int wlen = MultiByteToWideChar(CP_ACP, 0, ansi_text.c_str(), -1, NULL, 0);
+	std::vector<wchar_t> wbuf(wlen);
+	MultiByteToWideChar(CP_ACP, 0, ansi_text.c_str(), -1, wbuf.data(), wlen);
+
+	int len = WideCharToMultiByte(CP_UTF8, 0, wbuf.data(), -1, NULL, 0, NULL, NULL);
+	std::vector<char> buf(len);
+	WideCharToMultiByte(CP_UTF8, 0, wbuf.data(), -1, buf.data(), len, NULL, NULL);
+
+	return std::string(buf.data());
+}
+#else
+std::string utf8_to_ansi(const std::string& utf8_text)
+{
+	return utf8_text;
+}
+std::string ansi_to_utf8(const std::string& ansi_text)
+{
+	return utf8_text;
+}
+#endif
+
 void tolua_utils(sol::state& lua)
 {
+	UINT codePage = GetACP();
+
+	CPINFOEX cpInfo;
+	if (GetCPInfoEx(codePage, 0, &cpInfo)) {
+		std::string codePageName = cpInfo.CodePageName;
+		std::cout << "Current system code page name: " << cpInfo.CodePageName << std::endl;
+	}
+	else {
+		std::cerr << "Failed to get code page information." << std::endl;
+	}
+
     auto utils = lua["utils"].get_or_create<sol::table>();
     utils.set_function("nowEpochMS", []()->int64_t {
         return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
@@ -120,6 +167,8 @@ void tolua_utils(sol::state& lua)
         return std::chrono::duration_cast<duration_10m>(val.time_since_epoch()).count();
     });
 
+	utils.set_function("utf8_to_ansi", utf8_to_ansi);
+	utils.set_function("ansi_to_utf8", ansi_to_utf8);
     utils.set_function("detectFileCode", detectFileCode);
 	utils.set_function("detectStringCode", detectStringCode);
 	utils.set_function("convertStringEncoding", [](lua_State* L) -> int
@@ -140,16 +189,18 @@ void tolua_utils(sol::state& lua)
 				if (outputData == NULL)
 				{
 					lua_pushnil(L);
+					return 1;
 				}
 
 				lua_pushlstring(L, (const char*)outputData, outputLength);
 				free(outputData);
+				return 1;
 			}
 			else
 			{
 				lua_pushstring(L, "");
+				return 1;
 			}
-			return 1;
 		}
 		spdlog::error("Encoding conversion function parameter error");
 		lua_pushnil(L);
@@ -200,46 +251,4 @@ void tolua_utils(sol::state& lua)
 		lua_pushnil(L);
 		return 1;
 	});
-
-
-
-
-
-
-
-
-
-	//// 输入的文本
-	//const char* inputText = "hello";
-
-	//// 设置输入和输出的编码
-	//const char* fromEncoding = "UTF-8";
-	//const char* toEncoding = "GB2312";
-
-	//// 创建 iconv 转换句柄
-	//iconv_t cd = iconv_open(toEncoding, fromEncoding);
-	//if (cd == (iconv_t)-1) {
-	//	std::cerr << "Failed to create iconv conversion descriptor" << std::endl;
-	//	return;
-	//}
-
-	//// 输入和输出缓冲区
-	//char outputBuffer[256];
-	//char* outputPointer = outputBuffer;
-	//size_t inputLength = strlen(inputText);
-	//size_t outputLength = sizeof(outputBuffer);
-
-	//// 进行编码转换
-	//size_t result = iconv(cd, const_cast<const char**>(&inputText), &inputLength, &outputPointer, &outputLength);
-	//if (result == static_cast<size_t>(-1)) {
-	//	std::cerr << "Failed to convert encoding: " << strerror(errno) << std::endl;
-	//	iconv_close(cd);
-	//	return;
-	//}
-
-	//// 输出转换后的文本
-	//std::cout << "Converted text: " << std::string(outputBuffer, sizeof(outputBuffer) - outputLength) << std::endl;
-
-	//// 关闭 iconv 转换句柄
-	//iconv_close(cd);
 }

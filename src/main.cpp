@@ -2,6 +2,7 @@
 #include <iostream>
 #include <iup.h>
 #include "lua_module_register.h"
+#include "spdlog/spdlog.h"
 
 struct args 
 {

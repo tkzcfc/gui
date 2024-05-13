@@ -36,6 +36,11 @@ source_group("" FILES ${_Sources})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${_Sources})
 
 add_executable(${PROJECT_NAME} ${_Sources})
+
+target_compile_definitions(${PROJECT_NAME} 
+    PRIVATE _CRT_SECURE_NO_WARNINGS
+    )
+
 target_link_libraries(${PROJECT_NAME} thirdparty ${LUA_ENGINE})
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_LIST_DIR}/thirdparty)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/src)
